@@ -1,0 +1,550 @@
+{
+	"info": {
+		"_postman_id": "f411d92f-e827-49f8-9121-514c7e21588d",
+		"name": "elasticsearch",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "twiteer",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"user\": \"henteti\",\n    \"postDate\": \"2020-06-10T11:45:22+0000\",\n    \"message\": \"message 1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9200/twiteer/_doc",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9200",
+							"path": [
+								"twiteer",
+								"_doc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAll",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"query\": {\r\n        \"match_all\": {}\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9200/twiteer/_search",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9200",
+							"path": [
+								"twiteer",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "groupByUser",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"aggs\": {\n        \"genres\": {\n            \"terms\": {\n                \"field\": \"user\"\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{ES_HOST}}:{{ES_PORT}}/twiteer/_search",
+							"protocol": "http",
+							"host": [
+								"{{ES_HOST}}"
+							],
+							"port": "{{ES_PORT}}",
+							"path": [
+								"twiteer",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "groupByUser withoutHits",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"size\": 0,\n    \"aggs\": {\n        \"genres\": {\n            \"terms\": {\n                \"field\": \"user\"\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{ES_HOST}}:{{ES_PORT}}/twiteer/_search",
+							"protocol": "http",
+							"host": [
+								"{{ES_HOST}}"
+							],
+							"port": "{{ES_PORT}}",
+							"path": [
+								"twiteer",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "groupByUser withoutHits withDateFilter",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"size\": 0,\n    \"query\": {\n        \"range\": {\n            \"postDate\": {\n                \"gte\": \"2020-01-01T00:00:00+0000\"\n            }\n        }\n    },\n    \"aggs\": {\n        \"genres\": {\n            \"terms\": {\n                \"field\": \"user\"\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{ES_HOST}}:{{ES_PORT}}/twiteer/_search",
+							"protocol": "http",
+							"host": [
+								"{{ES_HOST}}"
+							],
+							"port": "{{ES_PORT}}",
+							"path": [
+								"twiteer",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "groupByPostDate",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"aggs\": {\n        \"genres\": {\n            \"terms\": {\n                \"field\": \"postDate\"\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{ES_HOST}}:{{ES_PORT}}/twiteer/_search",
+							"protocol": "http",
+							"host": [
+								"{{ES_HOST}}"
+							],
+							"port": "{{ES_PORT}}",
+							"path": [
+								"twiteer",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "enable fielddata on user field",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"properties\": {\n        \"user\": {\n            \"type\": \"text\",\n            \"fielddata\": true\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9200/twiteer/_mapping",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9200",
+							"path": [
+								"twiteer",
+								"_mapping"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "example",
+			"item": [
+				{
+					"name": "create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"metadata\": {\n    \t\"server\": \"s1\",\n    \t\"date\": \"2020-06-10T11:45:22+0000\"\n    },\n    \"data\": {\n    \t\"prop1\": \"value1\",\n    \t\"prop2\": \"value2\"\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9200/example/_doc",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9200",
+							"path": [
+								"example",
+								"_doc"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "enable fielddata on metadata.server",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"properties\": {\n        \"metadata.server\": {\n            \"type\": \"text\",\n            \"fielddata\": true\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9200/example/_mapping",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9200",
+							"path": [
+								"example",
+								"_mapping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "groupByServer",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"size\": 0,\n    \"aggs\": {\n        \"byServer\": {\n            \"terms\": {\n                \"field\": \"metadata.server\"\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{ES_HOST}}:{{ES_PORT}}/example/_search",
+							"protocol": "http",
+							"host": [
+								"{{ES_HOST}}"
+							],
+							"port": "{{ES_PORT}}",
+							"path": [
+								"example",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "enable fielddata on metadata.server, data.prop1",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"properties\": {\n        \"metadata.server\": {\n            \"type\": \"text\",\n            \"fielddata\": true\n        },\n        \"data.prop1\": {\n            \"type\": \"text\",\n            \"fielddata\": true\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9200/example/_mapping",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9200",
+							"path": [
+								"example",
+								"_mapping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "groupByServerByProp1",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"size\": 0,\n    \"aggs\": {\n        \"byServer\": {\n            \"terms\": {\n                \"field\": \"metadata.server\"\n            },\n            \"aggs\": {\n                \"byProp1\": {\n                    \"terms\": {\n                        \"field\": \"data.prop1\"\n                    }\n                }\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{ES_HOST}}:{{ES_PORT}}/example/_search",
+							"protocol": "http",
+							"host": [
+								"{{ES_HOST}}"
+							],
+							"port": "{{ES_PORT}}",
+							"path": [
+								"example",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "enable fielddata on metadata.server, data.prop1, data.prop2",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"properties\": {\n        \"metadata.server\": {\n            \"type\": \"text\",\n            \"fielddata\": true\n        },\n        \"data.prop1\": {\n            \"type\": \"text\",\n            \"fielddata\": true\n        },\n        \"data.prop2\": {\n            \"type\": \"text\",\n            \"fielddata\": true\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:9200/example/_mapping",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "9200",
+							"path": [
+								"example",
+								"_mapping"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "groupByServerByProp1ByProp2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"type": "text",
+								"value": "application/json",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"size\": 0,\n    \"aggs\": {\n        \"byServer\": {\n            \"terms\": {\n                \"field\": \"metadata.server\"\n            },\n            \"aggs\": {\n                \"byProp1\": {\n                    \"terms\": {\n                        \"field\": \"data.prop1\"\n                    },\n                    \"aggs\": {\n                        \"byProp2\": {\n                            \"terms\": {\n                                \"field\": \"data.prop2\"\n                            }\n                        }\n                    }\n                }\n            }\n        }\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://{{ES_HOST}}:{{ES_PORT}}/example/_search",
+							"protocol": "http",
+							"host": [
+								"{{ES_HOST}}"
+							],
+							"port": "{{ES_PORT}}",
+							"path": [
+								"example",
+								"_search"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
